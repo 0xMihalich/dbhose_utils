@@ -3,6 +3,7 @@
 from collections.abc import Generator
 from enum import Enum
 from io import BufferedReader
+from itertools import chain
 from typing import NamedTuple
 
 from light_compressor import (
@@ -72,7 +73,7 @@ def dump_convertor(
         dump_type = DumpType[dump_type.upper()]
 
     if compression_method.__class__ is str:
-        compression_method = CompressionMethod[dump_type.upper()]
+        compression_method = CompressionMethod[compression_method.upper()]
 
     reader: NativeReader | PGCopyReader | PGPackReader = detective(source)
 
@@ -105,9 +106,9 @@ def dump_convertor(
             writer.close()
     else:
         if reader.__class__ is NativeReader:
+            dtype_values = chain(reader.block_reader.read(), reader.to_rows())
             column_list = reader.block_reader.column_list
             metadata = metadata_from_columns(column_list)
-            dtype_values = reader.to_rows()
             fileobj = open(destination, "wb")
 
             if dump_type.writer is PGCopyWriter:
