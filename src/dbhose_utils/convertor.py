@@ -46,9 +46,9 @@ class DumpClass(NamedTuple):
 class DumpType(DumpClass, Enum):
     """Dump type enum."""
 
-    native = DumpClass("native", NativeReader, NativeWriter, False)
-    pgcopy = DumpClass("pgcopy", PGCopyReader, PGCopyWriter, False)
-    pgpack = DumpClass("pgpack", PGPackReader, PGPackWriter, True)
+    NATIVE = DumpClass("native", NativeReader, NativeWriter, False)
+    PGCOPY = DumpClass("pgcopy", PGCopyReader, PGCopyWriter, False)
+    PGPACK = DumpClass("pgpack", PGPackReader, PGPackWriter, True)
 
 
 def chunk_fileobj(fileobj: BufferedReader) -> Generator[bytes, None, None]:
@@ -64,16 +64,19 @@ def dump_convertor(
     source: str,
     destination: str,
     dump_type: DumpType | str,
-    compression_method: CompressionMethod = CompressionMethod.NONE,
+    compression_method: CompressionMethod | str = CompressionMethod.NONE,
 ) -> None:
     """Convert dumps function."""
 
     if dump_type.__class__ is str:
-        dump_type = DumpType[dump_type]
+        dump_type = DumpType[dump_type.upper()]
+
+    if compression_method.__class__ is str:
+        compression_method = CompressionMethod[dump_type.upper()]
 
     reader: NativeReader | PGCopyReader | PGPackReader = detective(source)
 
-    if reader.__class__ is PGCopyReader and dump_type is not DumpType.pgcopy:
+    if reader.__class__ is PGCopyReader and dump_type is not DumpType.PGCOPY:
         raise TypeError(
             "PGCopy dump don't support convert to any other types."
         )
