@@ -47,8 +47,9 @@ jobs:
         CIBW_BEFORE_BUILD: "pip install cython setuptools wheel -r requirements.txt"
         CIBW_SKIP: "*-win32"
         CIBW_ARCHS_WINDOWS: "AMD64"
-        CIBW_ENVIRONMENT_WINDOWS: "PYTHONPATH=$PYTHONPATH:$(python -c 'import nativelib, os; print(os.path.dirname(nativelib.__file__))')"
-        CIBW_BEFORE_BUILD_WINDOWS: "pip install cython setuptools wheel nativelib; python -c \"import nativelib, os; print('nativelib path:', os.path.dirname(nativelib.__file__))\"; pip install -r requirements.txt"
+        CIBW_BEFORE_ALL_WINDOWS: "pip install nativelib"
+        CIBW_ENVIRONMENT_WINDOWS: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages() + [site.getusersitepackages()]))')"
+        CIBW_BEFORE_BUILD_WINDOWS: "pip install cython setuptools wheel -r requirements.txt"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
