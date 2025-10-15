@@ -47,13 +47,8 @@ jobs:
         import subprocess
         import sys
 
-        try:
-            import nativelib
-        except ImportError:
-            print("nativelib not found, installing...")
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "nativelib"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "nativelib"])
 
-        # Получаем пути к nativelib
         import nativelib
         nativelib_path = os.path.dirname(nativelib.__file__)
         print(f"nativelib path: {nativelib_path}")
@@ -80,16 +75,34 @@ jobs:
       shell: bash
 
     - name: Build wheels
-      run: python -m cibuildwheel --output-dir wheel_prebuild
+      run: |
+        max_retries=3
+        for i in $(seq 1 $max_retries); do
+          echo "Attempt $i of $max_retries"
+          if python -m cibuildwheel --output-dir wheel_prebuild; then
+            echo "Build successful on attempt $i"
+            break
+          else
+            echo "Build failed on attempt $i"
+            if [ $i -eq $max_retries ]; then
+              echo "All attempts failed"
+              exit 1
+            fi
+            echo "Retrying in 10 seconds..."
+            sleep 10
+          fi
+        done
+      shell: bash
       env:
         CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-*"
         CIBW_ARCHS_MACOS: "x86_64 arm64"
         CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
-        CIBW_BEFORE_ALL: "python -m pip install --upgrade pip"
-        CIBW_BEFORE_BUILD: "pip install cython setuptools wheel -r requirements.txt"
+        CIBW_BEFORE_ALL: "pip install cython setuptools wheel -r requirements.txt"
         CIBW_SKIP: "*-win32 *-musllinux*"
         CIBW_ARCHS_WINDOWS: "AMD64"
         CIBW_ENVIRONMENT_WINDOWS: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages() + [site.getusersitepackages()]))')"
+        CIBW_COMMAND_TIMEOUT: "600"
+        CIBW_TEST_COMMAND_TIMEOUT: "300"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
