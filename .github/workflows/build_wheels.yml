@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
         python-version: '3.11'
 
     - name: Install cibuildwheel
-      run: pip install cibuildwheel==3.2.1
+      run: pip install cibuildwheel==2.23.3
 
     - name: Install ONLY cibuildwheel dependencies
       run: |
@@ -41,15 +41,12 @@ jobs:
       run: python -m cibuildwheel --output-dir wheel_prebuild
       env:
         CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-*"
-        CIBW_ARCHS_MACOS: "universal2"
-        MACOSX_DEPLOYMENT_TARGET: "10.14"
-        CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
-        CIBW_BEFORE_ALL: "pip install cython setuptools wheel -r requirements.txt"
+        CIBW_ARCHS_MACOS: "x86_64 arm64"
         CIBW_SKIP: "*-win32 *-musllinux*"
         CIBW_ARCHS_WINDOWS: "AMD64"
-        CIBW_ENVIRONMENT_WINDOWS: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages() + [site.getusersitepackages()]))')"
-        CIBW_COMMAND_TIMEOUT: "600"
-        CIBW_TEST_COMMAND_TIMEOUT: "300"
+        CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
+        CIBW_BEFORE_ALL: "python -m pip install --upgrade pip"
+        CIBW_BEFORE_BUILD: "pip install cython setuptools wheel -r requirements.txt"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
