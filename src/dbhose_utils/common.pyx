@@ -6,7 +6,7 @@ from pgcopylib import PGOid
 from pgcopylib.common import ArrayOidToOid
 from pgpack import metadata_reader
 
-from nativelib.common.columns cimport column
+from nativelib.common.columns.column cimport Column
 
 
 cdef dict DTYPE2OID = {
@@ -181,7 +181,7 @@ cpdef list columns_from_metadata(
         for _i in range(pgparam.nested):
             dtype = f"Array({dtype})"
 
-        column_list.append(column.Column(column, dtype))
+        column_list.append(Column(column, dtype))
 
     return column_list
 
