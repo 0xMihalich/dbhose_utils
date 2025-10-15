@@ -50,6 +50,7 @@ jobs:
         CIBW_ARCHS_MACOS: "x86_64 arm64"
         CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
         CIBW_BEFORE_ALL: "pip install cython setuptools wheel -r requirements.txt"
+        CIBW_BEFORE_ALL_LINUX: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && source $HOME/.cargo/env"
         CIBW_SKIP: "*-win32 *-i686"
         CIBW_ARCHS_WINDOWS: "AMD64"
         CIBW_ENVIRONMENT_WINDOWS: "PYTHONPATH=$PYTHONPATH:$(python -c 'import nativelib, os; print(os.path.dirname(nativelib.__file__))')"
