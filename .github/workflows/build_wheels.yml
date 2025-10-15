@@ -17,13 +17,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        include:
-          - os: macos-latest
-            arches: "x86_64 arm64"
-          - os: ubuntu-latest
-            arches: "x86_64 aarch64"
-          - os: windows-latest
-            arches: "AMD64"
 
     steps:
     - uses: actions/checkout@v4
@@ -38,19 +31,37 @@ jobs:
     - name: Install cibuildwheel
       run: pip install git+https://github.com/pypa/cibuildwheel.git
 
-    - name: Install dependencies
+    - name: Install dependencies (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      shell: bash
       run: |
         python -m pip install --upgrade pip
-        pip install cython setuptools wheel
-        pip install nativelib
-        pip install -r requirements.txt
+        pip install cython setuptools wheel nativelib
+        if [ -f "requirements.txt" ]; then
+          pip install -r requirements.txt
+        else
+          echo "requirements.txt not found"
+        fi
+
+    - name: Install dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: cmd
+      run: |
+        python -m pip install --upgrade pip
+        pip install cython setuptools wheel nativelib
+        if exist requirements.txt (
+          pip install -r requirements.txt
+        ) else (
+          echo requirements.txt not found
+        )
 
     - name: Build wheels
       run: python -m cibuildwheel --output-dir wheel_prebuild
       env:
         CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-*"
-        CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
-        CIBW_BEFORE_BUILD: "pip install -r requirements.txt"
+        CIBW_SKIP: "*-musllinux* pp38-* pp39-* *-i686"
+        CIBW_ARCHS_MACOS: "x86_64 arm64"
+        CIBW_BEFORE_ALL: "pip install --upgrade pip"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
