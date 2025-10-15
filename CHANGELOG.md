@@ -1,5 +1,10 @@
 # Version History
 
+## 0.0.0.3
+
+* Add wheels automake
+* Change nativelib cimport to import
+
 ## 0.0.0.2
 
 * Fix initialize compression_method from string
