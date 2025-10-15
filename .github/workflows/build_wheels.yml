@@ -47,7 +47,6 @@ jobs:
         import subprocess
         import sys
 
-        # Принудительно устанавливаем nativelib в текущее окружение
         try:
             import nativelib
         except ImportError:
@@ -90,9 +89,7 @@ jobs:
         CIBW_BEFORE_BUILD: "pip install cython setuptools wheel -r requirements.txt"
         CIBW_SKIP: "*-win32 *-musllinux*"
         CIBW_ARCHS_WINDOWS: "AMD64"
-        CIBW_BEFORE_ALL_WINDOWS: "pip install nativelib"
         CIBW_ENVIRONMENT_WINDOWS: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages() + [site.getusersitepackages()]))')"
-        CIBW_BEFORE_BUILD_WINDOWS: "pip install cython setuptools wheel -r requirements.txt"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
