@@ -6,7 +6,7 @@ from pgcopylib import PGOid
 from pgcopylib.common import ArrayOidToOid
 from pgpack import metadata_reader
 
-from nativelib.common.columns.column cimport Column
+from nativelib import Column
 
 
 cdef dict DTYPE2OID = {
