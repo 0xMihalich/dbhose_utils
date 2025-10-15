@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -44,20 +44,22 @@ jobs:
         from Cython.Build import cythonize
         import os
         import site
+        import subprocess
+        import sys
 
-        # Получаем пути к site-packages
-        site_packages = site.getsitepackages()
-        if not site_packages:
-            site_packages = [site.getusersitepackages()]
+        # Принудительно устанавливаем nativelib в текущее окружение
+        try:
+            import nativelib
+        except ImportError:
+            print("nativelib not found, installing...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "nativelib"])
 
-        include_dirs = []
-        for path in site_packages:
-            nativelib_path = os.path.join(path, 'nativelib')
-            if os.path.exists(nativelib_path):
-                include_dirs.append(nativelib_path)
-                print(f"Found nativelib at: {nativelib_path}")
+        # Получаем пути к nativelib
+        import nativelib
+        nativelib_path = os.path.dirname(nativelib.__file__)
+        print(f"nativelib path: {nativelib_path}")
 
-        include_dirs.append('.')
+        include_dirs = [nativelib_path, '.']
 
         extensions = [
             Extension(
@@ -86,6 +88,11 @@ jobs:
         CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
         CIBW_BEFORE_ALL: "python -m pip install --upgrade pip"
         CIBW_BEFORE_BUILD: "pip install cython setuptools wheel -r requirements.txt"
+        CIBW_SKIP: "*-win32 *-musllinux*"
+        CIBW_ARCHS_WINDOWS: "AMD64"
+        CIBW_BEFORE_ALL_WINDOWS: "pip install nativelib"
+        CIBW_ENVIRONMENT_WINDOWS: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages() + [site.getusersitepackages()]))')"
+        CIBW_BEFORE_BUILD_WINDOWS: "pip install cython setuptools wheel -r requirements.txt"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
