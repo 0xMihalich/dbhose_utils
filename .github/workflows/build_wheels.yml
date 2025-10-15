@@ -27,6 +27,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: true
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -35,6 +37,15 @@ jobs:
 
     - name: Install cibuildwheel
       run: pip install git+https://github.com/pypa/cibuildwheel.git
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install cython setuptools wheel
+        pip install nativelib
+        if [ -f "requirements.txt" ]; then
+          pip install -r requirements.txt
+        fi
 
     - name: Build wheels
       run: python -m cibuildwheel --output-dir wheel_prebuild
