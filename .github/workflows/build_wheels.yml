@@ -37,62 +37,8 @@ jobs:
         pip install cython setuptools wheel
       shell: bash
 
-    - name: Create setup.py with explicit include_dirs
-      run: |
-        cat > setup.py << 'EOF'
-        from setuptools import setup, Extension
-        from Cython.Build import cythonize
-        import os
-        import site
-        import subprocess
-        import sys
-
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "nativelib"])
-
-        import nativelib
-        nativelib_path = os.path.dirname(nativelib.__file__)
-        print(f"nativelib path: {nativelib_path}")
-
-        include_dirs = [nativelib_path, '.']
-
-        extensions = [
-            Extension(
-                "dbhose_utils.common",
-                ["src/dbhose_utils/common.pyx"],
-                include_dirs=include_dirs,
-            )
-        ]
-
-        setup(
-            ext_modules=cythonize(
-                extensions,
-                compiler_directives={
-                    'language_level': "3",
-                }
-            ),
-        )
-        EOF
-      shell: bash
-
     - name: Build wheels
-      run: |
-        max_retries=3
-        for i in $(seq 1 $max_retries); do
-          echo "Attempt $i of $max_retries"
-          if python -m cibuildwheel --output-dir wheel_prebuild; then
-            echo "Build successful on attempt $i"
-            break
-          else
-            echo "Build failed on attempt $i"
-            if [ $i -eq $max_retries ]; then
-              echo "All attempts failed"
-              exit 1
-            fi
-            echo "Retrying in 10 seconds..."
-            sleep 10
-          fi
-        done
-      shell: bash
+      run: python -m cibuildwheel --output-dir wheel_prebuild
       env:
         CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-*"
         CIBW_ARCHS_MACOS: "universal2"
