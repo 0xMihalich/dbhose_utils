@@ -44,7 +44,7 @@ jobs:
         CIBW_ARCHS_MACOS: "x86_64 arm64"
         CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
         CIBW_BEFORE_ALL: "python -m pip install --upgrade pip"
-        CIBW_BEFORE_BUILD: "pip install cython setuptools wheel; pip install -r requirements.txt"
+        CIBW_BEFORE_BUILD: "pip install cython setuptools wheel -r requirements.txt"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
