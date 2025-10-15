@@ -37,6 +37,48 @@ jobs:
         pip install cython setuptools wheel
       shell: bash
 
+    - name: Create setup.py with explicit include_dirs
+      run: |
+        cat > setup.py << 'EOF'
+        from setuptools import setup, Extension
+        from Cython.Build import cythonize
+        import os
+        import site
+
+        # Получаем пути к site-packages
+        site_packages = site.getsitepackages()
+        if not site_packages:
+            site_packages = [site.getusersitepackages()]
+
+        include_dirs = []
+        for path in site_packages:
+            nativelib_path = os.path.join(path, 'nativelib')
+            if os.path.exists(nativelib_path):
+                include_dirs.append(nativelib_path)
+                print(f"Found nativelib at: {nativelib_path}")
+
+        # Также добавляем текущую директорию
+        include_dirs.append('.')
+
+        extensions = [
+            Extension(
+                "dbhose_utils.common",
+                ["src/dbhose_utils/common.pyx"],
+                include_dirs=include_dirs,
+            )
+        ]
+
+        setup(
+            ext_modules=cythonize(
+                extensions,
+                compiler_directives={
+                    'language_level': "3",
+                }
+            ),
+        )
+        EOF
+      shell: bash
+
     - name: Build wheels
       run: python -m cibuildwheel --output-dir wheel_prebuild
       env:
@@ -45,6 +87,7 @@ jobs:
         CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
         CIBW_BEFORE_ALL: "python -m pip install --upgrade pip"
         CIBW_BEFORE_BUILD: "pip install cython setuptools wheel -r requirements.txt"
+        # ДОБАВЛЕНО: Явное указание include_dirs для nativelib
         CIBW_SKIP: "*-win32"
         CIBW_ARCHS_WINDOWS: "AMD64"
         CIBW_BEFORE_ALL_WINDOWS: "pip install nativelib"
