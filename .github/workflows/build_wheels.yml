@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -57,7 +57,6 @@ jobs:
                 include_dirs.append(nativelib_path)
                 print(f"Found nativelib at: {nativelib_path}")
 
-        # Также добавляем текущую директорию
         include_dirs.append('.')
 
         extensions = [
@@ -87,12 +86,6 @@ jobs:
         CIBW_ENVIRONMENT: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages()))')"
         CIBW_BEFORE_ALL: "python -m pip install --upgrade pip"
         CIBW_BEFORE_BUILD: "pip install cython setuptools wheel -r requirements.txt"
-        # ДОБАВЛЕНО: Явное указание include_dirs для nativelib
-        CIBW_SKIP: "*-win32"
-        CIBW_ARCHS_WINDOWS: "AMD64"
-        CIBW_BEFORE_ALL_WINDOWS: "pip install nativelib"
-        CIBW_ENVIRONMENT_WINDOWS: "PYTHONPATH=$PYTHONPATH:$(python -c 'import site; print(\":\".join(site.getsitepackages() + [site.getusersitepackages()]))')"
-        CIBW_BEFORE_BUILD_WINDOWS: "pip install cython setuptools wheel -r requirements.txt"
 
     - name: Upload wheels
       uses: actions/upload-artifact@v4
