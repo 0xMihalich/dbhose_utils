@@ -2,6 +2,7 @@
 
 ## 0.0.0.5
 
+* Update depends light-compressor==0.0.1.8
 * Update depends nativelib==0.2.1.2
 * Update depends pgcopylib==0.2.1.9
 * Update depends pgpack==0.3.0.9
