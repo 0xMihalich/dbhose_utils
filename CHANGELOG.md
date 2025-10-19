@@ -1,5 +1,13 @@
 # Version History
 
+## 0.0.0.5
+
+* Update depends nativelib==0.2.1.2
+* Update depends pgcopylib==0.2.1.9
+* Update depends pgpack==0.3.0.9
+* Update python version support to 3.10-3.14
+* Add auto upload to pip
+
 ## 0.0.0.4
 
 * Update depends nativelib==0.2.1.1
