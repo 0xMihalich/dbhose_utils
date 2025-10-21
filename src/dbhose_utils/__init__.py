@@ -28,4 +28,4 @@ __all__ = (
     "pgoid_from_metadata",
 )
 __author__ = "0xMihalich"
-__version__ = "0.0.0.5"
+__version__ = "0.0.0.6"
