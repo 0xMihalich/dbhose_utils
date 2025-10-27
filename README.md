@@ -82,6 +82,36 @@ Function for auto detect dump type and compression method
 
 Make current reader object from dump
 
+```python
+from dbhose_utils import dump_detective
+
+file = "path_to_any_dump"
+
+reader = dump_detective(file)
+```
+
+### dump_recovery
+
+Added dump_recovery function to recover data from incomplete dumps
+
+How it works
+
+For pgpack and pgcopy, the damaged archive is recovered to the last valid row; for native, the damaged archive is recovered to the last valid block.
+Why might this be useful? Let's say you were dumping a table and at that moment the server crashed/the connection was lost/some other force majeure occurred.
+Now you have the opportunity to retrieve at least some data if you need it here and now.
+
+```python
+from dbhose_utils import dump_recovery
+
+file_path = "path_to_broken_dump"
+recovery_path = "path_to_recovery_dump"
+
+dump_recovery(
+    file_path=file_path,
+    recovery_path=recovery_path,
+)
+```
+
 ## Installation
 
 From pip

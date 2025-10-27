@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dbhose_utils"
-version = "0.0.0.6"
+version = "0.0.1.0"
 description = "DBHose dumps convertors utility."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -22,10 +22,10 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "light-compressor==0.0.1.8",
-    "nativelib==0.2.1.3",
-    "pgcopylib==0.2.2.0",
-    "pgpack==0.3.1.0",
+    "light-compressor==0.0.1.9",
+    "nativelib==0.2.2.1",
+    "pgcopylib==0.2.2.2",
+    "pgpack==0.3.1.1",
 ]
 
 [project.urls]

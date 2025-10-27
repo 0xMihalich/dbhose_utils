@@ -1,7 +1,17 @@
 """Metadata convert functions."""
 
-from nativelib import Column
-from pgcopylib import PGOid
+from collections.abc import Generator
+from typing import Any
+
+from nativelib import (
+    Column,
+    NativeReader,
+)
+from pgcopylib import (
+    PGCopyReader,
+    PGOid,
+)
+from pgpack import PGPackReader
 
 
 def pgoid_from_metadata(metadata: bytes) -> list[PGOid]:
@@ -21,5 +31,13 @@ def columns_from_metadata(
 
 def metadata_from_columns(column_list: list[Column]) -> bytes:
     """Convert Native column_list to PGPack metadata."""
+
+    ...
+
+
+def recover_rows(
+    reader: NativeReader | PGCopyReader | PGPackReader,
+) -> Generator[Any, None, None]:
+    """Read rows from broken reader."""
 
     ...

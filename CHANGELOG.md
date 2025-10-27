@@ -1,5 +1,14 @@
 # Version History
 
+## 0.0.1.0
+
+* Add dump_recovery(file_path, recovery_path) function
+* Update depends light-compressor==0.0.1.9
+* Update depends nativelib==0.2.2.1
+* Update depends pgcopylib==0.2.2.2
+* Update depends pgpack==0.3.1.1
+* Update README.md
+
 ## 0.0.0.6
 
 * Update depends nativelib==0.2.1.3

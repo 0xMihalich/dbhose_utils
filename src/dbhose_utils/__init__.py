@@ -14,6 +14,7 @@ from .convertor import (
     dump_convertor,
 )
 from .detective import dump_detective
+from .recovery import dump_recovery
 
 
 __all__ = (
@@ -24,8 +25,9 @@ __all__ = (
     "columns_from_metadata",
     "dump_convertor",
     "dump_detective",
+    "dump_recovery",
     "metadata_from_columns",
     "pgoid_from_metadata",
 )
 __author__ = "0xMihalich"
-__version__ = "0.0.0.6"
+__version__ = "0.0.1.0"

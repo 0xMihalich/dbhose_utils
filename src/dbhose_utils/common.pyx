@@ -219,3 +219,13 @@ cpdef bytes metadata_from_columns(list column_list):
 
     json_metadata = dumps(metadata, ensure_ascii=False)
     return json_metadata.encode("utf-8")
+
+
+def recover_rows(reader: object):
+    """Read rows from broken reader."""
+
+    try:
+        for data in reader.to_rows():
+            yield data
+    except EOFError:
+        """Skip invalid data"""

@@ -14,7 +14,7 @@ PGCOPY_HEADER = b"PGCOPY\n\xff"
 
 
 def dump_detective(
-    file: str | Path | BufferedReader
+    file: str | Path | BufferedReader,
 ) -> PGCopyReader | PGPackReader | NativeReader:
     """Auto detect dump type and return reader."""
 
