@@ -1,5 +1,10 @@
 # Version History
 
+## 0.0.1.1
+
+* Update depends pgcopylib==0.2.2.3
+* Update depends pgpack==0.3.1.2
+
 ## 0.0.1.0
 
 * Add dump_recovery(file_path, recovery_path) function
