@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools<70", "wheel", "Cython==0.29.33"]
+requires = ["setuptools", "wheel", "Cython>=0.29.33"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "dbhose_utils"
-version = "0.0.1.5"
+version = "0.0.1.6"
 description = "DBHose dumps convertors utility."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -17,12 +17,15 @@ classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "light-compressor==0.0.2.0",
-    "nativelib==0.2.2.3",
-    "pgcopylib==0.2.2.6",
-    "pgpack==0.3.1.5",
+    "light-compressor==0.0.2.1",
+    "nativelib==0.2.2.4",
+    "pgcopylib==0.2.2.7",
+    "pgpack==0.3.1.6",
 ]
 
 [project.urls]

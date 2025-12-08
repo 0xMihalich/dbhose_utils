@@ -1,5 +1,14 @@
 # Version History
 
+## 0.0.1.6
+
+* Update depends light-compressor==0.0.2.1
+* Update depends nativelib==0.2.2.4
+* Update depends pgcopylib==0.2.2.7
+* Update depends pgpack==0.3.1.6
+* Back compile depends to cython>=0.29.33
+* Make wheels for python 3.10-3.14
+
 ## 0.0.1.5
 
 * Update depends light-compressor==0.0.2.0
