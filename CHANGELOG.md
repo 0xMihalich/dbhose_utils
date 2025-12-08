@@ -1,5 +1,10 @@
 # Version History
 
+## 0.0.2.0
+
+* Update depends pgcopylib==0.2.2.8
+* Update depends pgpack==0.3.1.7
+
 ## 0.0.1.6
 
 * Update depends light-compressor==0.0.2.1
