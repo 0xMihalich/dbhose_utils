@@ -15,13 +15,15 @@ extensions = [
 
 setup(
     name="dbhose_utils",
+    version="0.0.2.3",
     package_dir={"": "src"},
     ext_modules=cythonize(extensions, language_level="3"),
-    packages=[
+    py_modules=[
         "dbhose_utils.common",
     ],
+    packages=["dbhose_utils"],
     package_data={
-        "dbhose_utils.common": [
+        "dbhose_utils": [
             "**/*.pyx",
             "**/*.pyi",
             "**/*.pxd",

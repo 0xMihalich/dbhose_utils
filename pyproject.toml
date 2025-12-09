@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dbhose_utils"
-version = "0.0.2.2"
+version = "0.0.2.3"
 description = "DBHose dumps convertors utility."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,8 +24,8 @@ classifiers = [
 dependencies = [
     "light-compressor==0.0.2.1",
     "nativelib==0.2.2.4",
-    "pgcopylib==0.2.3.1",
-    "pgpack==0.3.2.1",
+    "pgcopylib==0.2.3.2",
+    "pgpack==0.3.2.2",
 ]
 
 [project.urls]
@@ -35,8 +35,12 @@ Repository = "https://github.com/0xMihalich/dbhose_utils"
 Changelog = "https://github.com/0xMihalich/dbhose_utils/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
-packages = {find = {where = ["src"]}}
 package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["dbhose_utils"]
+exclude = ["dbhose_utils.common"]
 
 [tool.setuptools.package-data]
 "*" = ["**/*.pyx", "**/*.pyi", "**/*.pxd", "*.pxd", "*.pyd", "*.md", "*.txt"]
