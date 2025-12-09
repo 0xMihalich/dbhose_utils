@@ -1,5 +1,9 @@
 # Version History
 
+## 0.0.2.4
+
+* Update depends nativelib==0.2.2.5
+
 ## 0.0.2.3
 
 * Update depends pgcopylib==0.2.3.2
